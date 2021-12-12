@@ -83,3 +83,25 @@
 
 - 邮箱：1345648755@qq.com
 
+
+## Appendix
+### build
+1. export toolchain (default aarch64-linux-gnu- in Makefile)
+2. make (prebuilts libs are all built by aarch64-linux-gnu-)
+
+
+### run
+1. cp libRtspServer to target board
+2. ./libRtspServer -v /dev/videoX            # videoX is the v4l2 capture device
+
+
+### issue
+1. if rtsp use 0.0.0.0 as the url, like below
+Play this stream using the URL "rtsp://0.0.0.0:8554/live"
+
+Please set the default gateway for eth0.
+eg.
+
+route add default gw 192.168.1.1 eth0
+
+
