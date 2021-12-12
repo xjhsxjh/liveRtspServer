@@ -28,7 +28,7 @@ static void help()
 }
 
 int main(int argc, char* argv[])
-{ 
+{
     int port = 8554;
     bool multicast = false;
     int videoWidth = 320;
@@ -39,7 +39,7 @@ int main(int argc, char* argv[])
     int audioNumOfChannel = 2;
     std::string videoDev;
     std::string audioDev;
-    char c;
+    int opt;
 
     if(argc == 1)
     {
@@ -47,9 +47,9 @@ int main(int argc, char* argv[])
         return 0;
     }
 
-    while ((c = getopt(argc, argv, "p:m:W:H:f:A:F:c:v:a:h")) != -1)
+    while ((opt = getopt(argc, argv, "p:m:W:H:f:A:F:c:v:a:h")) != -1)
 	{
-		switch (c)
+		switch (opt)
 		{
         case 'p':
             port = atoi(optarg);
@@ -61,9 +61,9 @@ int main(int argc, char* argv[])
                 multicast = true;
             else
                 multicast = false;
-            
+
             multicast == true ? printf("multicast\n") : printf("unicast\n");
-            
+
             break;
 
         case 'W':
@@ -135,7 +135,7 @@ int main(int argc, char* argv[])
     {
         sms = ServerMediaSession::createNew(*env, "live", "live rtsp server",
                                                 "live rtsp server", True /* 表示是否为多播*/);
-        
+
         struct in_addr videoDestinationAddress;
         videoDestinationAddress.s_addr = chooseRandomIPv4SSMAddress(*env);
         const unsigned short videoRtpPortNum = 18888;
@@ -156,7 +156,7 @@ int main(int argc, char* argv[])
             sms->addSubsession(V4l2H264DevMulticastServerMediaSubsession::createNew(*env, videoDev.c_str(),
                                 videoDestinationAddress, videoRtpPort, videoRtcpPort, ttl,
                                 videoWidth, videoHeight, videoFps));
-        
+
         if(!audioDev.empty())
             sms->addSubsession(AlsaAACDevMulticastServerMediaSubsession::createNew(*env, audioDev.c_str(),
                                 audioDestinationAddress, audioRtpPort, audioRtcpPort, ttl,
@@ -170,7 +170,7 @@ int main(int argc, char* argv[])
         if(!videoDev.empty())
             sms->addSubsession(V4l2H264DevUnicastServerMediaSubsession::createNew(*env, videoDev.c_str(),
                                     True, videoWidth, videoHeight, videoFps));
-        
+
         if(!audioDev.empty())
             sms->addSubsession(AlsaAACDevUnicastServerMediaSubsession::createNew(*env, audioDev.c_str(),
                                     True, audioSamplingFreq, audioNumOfChannel, audioSamplingFmt.c_str()));
